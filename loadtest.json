@@ -1,36 +1,30 @@
 {
     "config":{
-        "target": "http://localhost:8001",
-        "http": {
-            "timeout": 30
-        },
-        "phase": [
-            {
-                "duration": 30,
-                "arriavalRate": 20
-            }
-        ]
+      "target": "http://localhost:8001",
+      "phases": [
+        {
+          "duration": 60,
+          "arrivalRate": 30
+        }
+      ]
     },
     "scenarios": [{
-        "flow": [
-            {
-                "get": {
-                    "url": "/"
-                }
-            }, {
-                "posts": {
-                    "url": "/auth/login",
-                    "json": {
-                        "email": "zerohch0@gmail.com",
-                        "password": "nodejsbook"
-                    },
-                    "followRedirect": false
-                }
-            }, {
-                "get": {
-                    "url": "/hashtag?hashtag=nodebird"
-                }
-            }
-        ]
+      "flow": [{
+        "get": {
+          "url": "/"
+        }
+      }, {
+        "post": {
+          "url": "/auth/login",
+          "json": {
+            "email": "zerohch0@naver.com",
+            "password": "nodejsbook"
+          }
+        }
+      }, {
+        "get": {
+          "url": "/hashtag?hashtag=nodebird"
+        }
+      }]
     }]
-}
+  }
