@@ -9,8 +9,7 @@ const passport = require('passport');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const redis = require('redis');
-const connetRedis = require('connect-redis')
-const RedisStore = connetRedis(session);
+const RedisStore = require('connect-redis')(session);
 
 dotenv.config();
 const redisClient = redis.createClient({
@@ -60,7 +59,7 @@ app.use('/img', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-const sessionOption = {
+/*const sessionOption = {
   resave: false,
   saveUninitialized: false,
   secret: process.env.COOKIE_SECRET,
@@ -69,12 +68,33 @@ const sessionOption = {
     secure: false,
   },
   store: new RedisStore({ client: redisClient }),
-};
+};*/
+
+const client = redis.createClient({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  password: process.env.REDIS_PASSWORD,
+  logErrors: true,
+});
+
 if (process.env.NODE_ENV === 'production') {
   sessionOption.proxy = true;
   // sessionOption.cookie.secure = true;
 }
-app.use(session(sessionOption));
+
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.COOKIE_SECRET,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
+    store: new RedisStore({ client: redisClient })
+  })
+)
+
 app.use(passport.initialize());
 app.use(passport.session());
 
