@@ -9,7 +9,8 @@ const passport = require('passport');
 const helmet = require('helmet');
 const hpp = require('hpp');
 const redis = require('redis');
-const RedisStore = require('connect-redis')(session);
+const connetRedis = require('connect-redis')
+const RedisStore = connetRedis(session);
 
 dotenv.config();
 const redisClient = redis.createClient({
